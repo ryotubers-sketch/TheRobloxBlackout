@@ -53,34 +53,43 @@
     </div>
 
     <script>
-        function updateCountdown() {
-            const now = new Date().getTime();
-            const march1 = new Date(new Date().getFullYear(), 2, 1).getTime();
-            const march7 = new Date(new Date().getFullYear(), 2, 7).getTime();
-            
-            let targetDate, description;
-            
-            if (now < march1) {
-                targetDate = march1;
-                description = "Time remaining until March 1st";
-            } else if (now < march7) {
-                targetDate = march7;
-                description = "Time remaining until March 7th";
-            } else {
-                document.getElementById('countdown').innerHTML = "🎉 The Roblox Blackout has ended!";
-                document.getElementById('description').textContent = description;
-                return;
-            }
-            
-            const distance = targetDate - now;
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        <script>
+    const targetDate = new Date(2026, 2, 1, 0, 0, 0).getTime(); // March 1, 2026
+    const countdownEl = document.getElementById("countdown");
+    const descriptionEl = document.getElementById("description");
 
-            document.getElementById('description').textContent = description;
-            document.getElementById('countdown').innerHTML = 
-                `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    function updateCountdown() {
+        const now = new Date().getTime();
+        let distance = targetDate - now;
+
+        if (distance < 0) {
+            distance = 0;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        countdownEl.innerHTML = `${days}d:${hours}h:${minutes}m:${seconds}s`;
+
+        if (distance <= 0) {
+            clearInterval(interval);
+            countdownEl.innerHTML = "Leave Roblox";
+            descriptionEl.style.display = "none";
+
+            // Flash effect
+            let isWhite = true;
+            setInterval(() => {
+                countdownEl.style.color = isWhite ? "white" : "black";
+                isWhite = !isWhite;
+            }, 500);
+        }
+    }
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+</script>
         }
 
         updateCountdown();
